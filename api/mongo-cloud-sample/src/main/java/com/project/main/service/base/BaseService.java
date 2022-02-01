@@ -59,7 +59,8 @@ public abstract class BaseService<E extends BaseDocument, D extends BaseDto, PK 
 
     private synchronized Integer generateNextIdValue() {
         final PageRequest pageable = PageRequest.of(0, 1, ApplicationUtil.sortDescending(Constants.ID));
-        final Integer id = getRepository().findAll(pageable).stream().findFirst().get().getId();
+        final Optional<E> first = getRepository().findAll(pageable).stream().findFirst();
+        final Integer id = first.isEmpty() ? 0 : first.get().getId();
         return Math.addExact(id, 1);
     }
 
